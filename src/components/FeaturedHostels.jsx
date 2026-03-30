@@ -1,39 +1,31 @@
 import React from 'react'
 import { MapPin, Star } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import API from '../utils/api';
 
 const FeaturedHostels = () => {
-    const featuredHostels = [
-    {
-      id: 1,
-      name: "Green Valley Hostel",
-      location: "Near JNTU College",
-      price: "₹5,000/month",
-      image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=500",
-      rating: 4.5,
-      amenities: ["WiFi", "Mess", "Laundry"],
-      available: 5
-    },
-    {
-      id: 2,
-      name: "Student Paradise",
-      location: "Kukatpally",
-      price: "₹6,500/month",
-      image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500",
-      rating: 4.8,
-      amenities: ["WiFi", "Gym", "AC Rooms"],
-      available: 3
-    },
-    {
-      id: 3,
-      name: "Campus Heights",
-      location: "Miyapur",
-      price: "₹4,500/month",
-      image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500",
-      rating: 4.2,
-      amenities: ["WiFi", "Mess", "Security"],
-      available: 8
-    }
-  ];
+
+    const [hostels, setHostels] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchHostels();
+    }, []);
+
+    const fetchHostels = async () => {
+        try {
+            setLoading(true);
+            const response = await API.get('/hostel');
+            // Show only first 3 hostels on homepage
+            setHostels(response.data.slice(0, 3));
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching hostels:', error);
+            setLoading(false);
+        }
+    };
+
+
     return (
         <div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

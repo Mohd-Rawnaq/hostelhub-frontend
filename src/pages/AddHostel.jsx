@@ -18,6 +18,7 @@ export default function AddHostel() {
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const availableAmenities = [
     { id: 'wifi', name: 'WiFi', icon: Wifi },
@@ -93,47 +94,38 @@ export default function AddHostel() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       setLoading(true);
-      
+
       try {
-        // Import API at the top of your file: import API from '../utils/api';
-        const response = await API.post('/hostel/add', {
-          name: formData.name,
-          location: formData.location,
-          city: formData.city,
-          address: formData.address,
-          price: Number(formData.price),
-          description: formData.description,
-          amenities: selectedAmenities,
-          totalRooms: Number(formData.totalRooms),
-          roomType: formData.roomType,
-          gender: formData.gender
+        const formDataToSend = new FormData();
+
+        formDataToSend.append('name', formData.name);
+        formDataToSend.append('location', formData.location);
+        formDataToSend.append('city', formData.city);
+        formDataToSend.append('address', formData.address);
+        formDataToSend.append('price', formData.price);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('amenities', JSON.stringify(selectedAmenities));
+        formDataToSend.append('totalRooms', formData.totalRooms);
+        formDataToSend.append('roomType', formData.roomType);
+        formDataToSend.append('gender', formData.gender);
+
+        // Add images
+        selectedImages.forEach((image) => {
+          formDataToSend.append('images', image);
         });
 
-        // For now, just show success
-        console.log('Hostel data:', {
-          ...formData,
-          amenities: selectedAmenities
+        const response = await API.post('/hostel/add', formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         });
-        
+
         alert('Hostel added successfully!');
-        
-        // Reset form
-        setFormData({
-          name: '',
-          location: '',
-          city: '',
-          address: '',
-          price: '',
-          description: '',
-          totalRooms: '',
-          roomType: 'Single',
-          gender: 'Boys'
-        });
-        setSelectedAmenities([]);
-        
+        window.location.href = '/owner-dashboard';
+
       } catch (error) {
         alert(error.response?.data?.message || 'Failed to add hostel');
       } finally {
@@ -141,7 +133,6 @@ export default function AddHostel() {
       }
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
@@ -156,7 +147,7 @@ export default function AddHostel() {
               <a href="/owner-dashboard" className="text-gray-600 hover:text-blue-600">
                 Dashboard
               </a>
-              <button 
+              <button
                 onClick={() => {
                   localStorage.clear();
                   window.location.href = '/';
@@ -191,9 +182,8 @@ export default function AddHostel() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-4 py-2 border ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
-                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full pl-10 pr-4 py-2 border ${errors.name ? 'border-red-500' : 'border-gray-300'
+                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   placeholder="e.g., Green Valley Hostel"
                 />
               </div>
@@ -213,9 +203,8 @@ export default function AddHostel() {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-2 border ${
-                      errors.location ? 'border-red-500' : 'border-gray-300'
-                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full pl-10 pr-4 py-2 border ${errors.location ? 'border-red-500' : 'border-gray-300'
+                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     placeholder="e.g., Near JNTU College"
                   />
                 </div>
@@ -233,9 +222,8 @@ export default function AddHostel() {
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-2 border ${
-                      errors.city ? 'border-red-500' : 'border-gray-300'
-                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full pl-10 pr-4 py-2 border ${errors.city ? 'border-red-500' : 'border-gray-300'
+                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     placeholder="e.g., Hyderabad"
                   />
                 </div>
@@ -253,9 +241,8 @@ export default function AddHostel() {
                 value={formData.address}
                 onChange={handleChange}
                 rows="2"
-                className={`w-full px-4 py-2 border ${
-                  errors.address ? 'border-red-500' : 'border-gray-300'
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                className={`w-full px-4 py-2 border ${errors.address ? 'border-red-500' : 'border-gray-300'
+                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 placeholder="Enter complete address with street, area, and landmarks"
               />
               {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
@@ -274,9 +261,8 @@ export default function AddHostel() {
                     name="price"
                     value={formData.price}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-2 border ${
-                      errors.price ? 'border-red-500' : 'border-gray-300'
-                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full pl-10 pr-4 py-2 border ${errors.price ? 'border-red-500' : 'border-gray-300'
+                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     placeholder="e.g., 5000"
                   />
                 </div>
@@ -292,9 +278,8 @@ export default function AddHostel() {
                   name="totalRooms"
                   value={formData.totalRooms}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 border ${
-                    errors.totalRooms ? 'border-red-500' : 'border-gray-300'
-                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full px-4 py-2 border ${errors.totalRooms ? 'border-red-500' : 'border-gray-300'
+                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   placeholder="e.g., 20"
                 />
                 {errors.totalRooms && <p className="text-red-500 text-xs mt-1">{errors.totalRooms}</p>}
@@ -347,9 +332,8 @@ export default function AddHostel() {
                 value={formData.description}
                 onChange={handleChange}
                 rows="4"
-                className={`w-full px-4 py-2 border ${
-                  errors.description ? 'border-red-500' : 'border-gray-300'
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                className={`w-full px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'
+                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 placeholder="Describe your hostel, its facilities, rules, and what makes it special..."
               />
               {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
@@ -365,17 +349,16 @@ export default function AddHostel() {
                 {availableAmenities.map((amenity) => {
                   const Icon = amenity.icon;
                   const isSelected = selectedAmenities.includes(amenity.name);
-                  
+
                   return (
                     <button
                       key={amenity.id}
                       type="button"
                       onClick={() => toggleAmenity(amenity.name)}
-                      className={`flex flex-col items-center p-4 border-2 rounded-lg transition-all ${
-                        isSelected
-                          ? 'border-blue-500 bg-blue-50 text-blue-600'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className={`flex flex-col items-center p-4 border-2 rounded-lg transition-all ${isSelected
+                        ? 'border-blue-500 bg-blue-50 text-blue-600'
+                        : 'border-gray-300 hover:border-gray-400'
+                        }`}
                     >
                       <Icon className="w-6 h-6 mb-2" />
                       <span className="text-sm font-medium">{amenity.name}</span>
@@ -385,16 +368,35 @@ export default function AddHostel() {
               </div>
             </div>
 
+            {/* Image Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Hostel Images (Max 5)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  const files = Array.from(e.target.files).slice(0, 5);
+                  setSelectedImages(files);
+                }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Selected: {selectedImages.length} image(s)
+              </p>
+            </div>
+
             {/* Submit Button */}
             <div className="pt-4">
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className={`w-full py-3 rounded-lg font-semibold text-white transition-colors ${
-                  loading
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-blue-600 hover:bg-blue-700'
-                }`}
+                className={`w-full py-3 rounded-lg font-semibold text-white transition-colors ${loading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
               >
                 {loading ? 'Adding Hostel...' : 'Add Hostel'}
               </button>

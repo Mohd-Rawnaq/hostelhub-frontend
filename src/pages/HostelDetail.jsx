@@ -21,7 +21,7 @@ export default function HostelDetail() {
       // Import API: import API from '../utils/api';
       const response = await API.get(`/hostel/${hostelId}`);
       setHostel(response.data);
-      
+
       // Dummy data for now
       // const dummyHostel = {
       //   _id: '1',
@@ -43,7 +43,7 @@ export default function HostelDetail() {
       //     email: 'rajesh@example.com'
       //   }
       // };
-      
+
       // setHostel(dummyHostel);
       setLoading(false);
     } catch (error) {
@@ -55,7 +55,7 @@ export default function HostelDetail() {
   const handleBooking = async () => {
     const token = localStorage.getItem('token');
     const userType = localStorage.getItem('userType');
-    
+
     if (!token) {
       alert('Please login to book a room');
       window.location.href = '/login';
@@ -74,15 +74,15 @@ export default function HostelDetail() {
 
     try {
       setBookingLoading(true);
-      
+
       // TODO: Create booking API
       const response = await API.post('/booking/create', {
         hostelId: hostel._id,
         price: hostel.price
       });
-      
+
       alert('Booking request sent successfully! The owner will review your request.');
-      
+
       setBookingLoading(false);
     } catch (error) {
       alert(error.response?.data?.message || 'Failed to create booking');
@@ -129,7 +129,7 @@ export default function HostelDetail() {
               <Home className="w-8 h-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">HostelHub</span>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <a href="/hostels" className="text-gray-700 hover:text-blue-600">Browse Hostels</a>
               <a href="/student-dashboard" className="text-gray-700 hover:text-blue-600">Dashboard</a>
@@ -165,8 +165,25 @@ export default function HostelDetail() {
           <div className="lg:col-span-2 space-y-6">
             {/* Image Gallery */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="h-96 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
-                <Home className="w-32 h-32 text-white opacity-50" />
+              <div className="h-96 bg-gray-200 overflow-hidden">
+                {hostel.images && hostel.images.length > 0 ? (
+                  <div className="relative">
+                    <img
+                      src={hostel.images[0]}
+                      alt={hostel.name}
+                      className="w-full h-96 object-cover"
+                    />
+                    {hostel.images.length > 1 && (
+                      <div className="absolute bottom-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
+                        +{hostel.images.length - 1} more photos
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                    <Home className="w-32 h-32 text-white opacity-50" />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -283,19 +300,18 @@ export default function HostelDetail() {
                   <button
                     onClick={handleBooking}
                     disabled={bookingLoading || hostel.rooms.available === 0}
-                    className={`w-full py-3 rounded-lg font-semibold text-white transition-colors ${
-                      hostel.rooms.available === 0
+                    className={`w-full py-3 rounded-lg font-semibold text-white transition-colors ${hostel.rooms.available === 0
                         ? 'bg-gray-400 cursor-not-allowed'
                         : bookingLoading
-                        ? 'bg-blue-400 cursor-not-allowed'
-                        : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
+                          ? 'bg-blue-400 cursor-not-allowed'
+                          : 'bg-blue-600 hover:bg-blue-700'
+                      }`}
                   >
-                    {hostel.rooms.available === 0 
-                      ? 'No Rooms Available' 
-                      : bookingLoading 
-                      ? 'Processing...' 
-                      : 'Request Booking'}
+                    {hostel.rooms.available === 0
+                      ? 'No Rooms Available'
+                      : bookingLoading
+                        ? 'Processing...'
+                        : 'Request Booking'}
                   </button>
 
                   <p className="text-xs text-gray-500 text-center mt-4">

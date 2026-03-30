@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Home, MapPin, Star, Users, Search, Filter, DollarSign, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import API from '../utils/api';
+import { useParams } from 'react-router-dom';
+import params from 'react-router-dom';
+import searchParams from 'react-router-dom';
+import URLSearchParams from 'react-router-dom';
 
 export default function HostelListing() {
   const [hostels, setHostels] = useState([]);
@@ -9,7 +13,7 @@ export default function HostelListing() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  
+
   const [filters, setFilters] = useState({
     priceRange: 'all',
     roomType: 'all',
@@ -22,6 +26,14 @@ export default function HostelListing() {
   // Fetch hostels from backend
   useEffect(() => {
     fetchHostels();
+
+    // Read search params from URL
+    const params = new URLSearchParams(window.location.search);
+    const searchParam = params.get('search');
+    const priceParam = params.get('price');
+
+    if (searchParam) setSearchTerm(searchParam);
+    if (priceParam) setFilters(prev => ({ ...prev, priceRange: priceParam }));
   }, []);
 
   const fetchHostels = async () => {
@@ -110,11 +122,11 @@ export default function HostelListing() {
               <Home className="w-8 h-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">HostelHub</span>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <a href="/" className="text-gray-700 hover:text-blue-600">Home</a>
               <a href="/student-dashboard" className="text-gray-700 hover:text-blue-600">Dashboard</a>
-              <button 
+              <button
                 onClick={() => {
                   localStorage.clear();
                   window.location.href = '/';
@@ -236,11 +248,10 @@ export default function HostelListing() {
                       <button
                         key={amenity}
                         onClick={() => toggleAmenityFilter(amenity)}
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          filters.amenities.includes(amenity)
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${filters.amenities.includes(amenity)
                             ? 'bg-blue-600 text-white'
                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
+                          }`}
                       >
                         {amenity}
                       </button>

@@ -1,10 +1,21 @@
 import React, { useState } from 'react'
 import { MapPin, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import API from '../utils/api';
+// import { useParams } from 'react-router-dom';
+import params from 'react-router-dom';
 
 const HeroSection = () => {
     const [searchLocation, setSearchLocation] = useState('');
     const [priceRange, setPriceRange] = useState('');
+    const handleSearch = () => {
+        // Redirect to hostel listing page with search params
+        const params = new URLSearchParams();
+        if (searchLocation) params.append('search', searchLocation);
+        if (priceRange) params.append('price', priceRange);
+
+        window.location.href = `/hostels?${params.toString()}`;
+    };
     return (
         <div>
             <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
@@ -40,7 +51,10 @@ const HeroSection = () => {
                                     <option value="7000+">Above ₹7,000</option>
                                 </select>
 
-                                <button className="bg-blue-600 text-white px-8 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center">
+                                <button
+                                    onClick={handleSearch}
+                                    className="bg-blue-600 text-white px-8 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center"
+                                >
                                     <Search className="w-5 h-5 mr-2" />
                                     Search
                                 </button>
