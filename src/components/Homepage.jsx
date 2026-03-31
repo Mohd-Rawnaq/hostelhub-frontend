@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, MapPin, Wifi, Utensils, Shield, Star, Users, Home } from 'lucide-react';
 import { useEffect } from 'react';
 import API from '../utils/api';
+import { Link } from 'react-router-dom'
 
 export default function HostelHomepage() {
     const [searchLocation, setSearchLocation] = useState('');
@@ -91,10 +92,12 @@ export default function HostelHomepage() {
 
                         <div className="flex items-center space-x-4">
                             <button className="text-blue-600 hover:text-blue-700 font-medium">
+                                <Link to='/login'>
                                 Login
+                                </Link>
                             </button>
                             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                                Sign Up
+                                <Link to='/studentsignup'> Sign Up</Link>
                             </button>
                         </div>
                     </div>
@@ -148,10 +151,10 @@ export default function HostelHomepage() {
                         {/* CTA Buttons */}
                         <div className="mt-8 flex justify-center gap-4">
                             <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 shadow-lg">
-                                Sign Up as Student
+                                <Link to='/studentsignup'>Sign Up as Student</Link>
                             </button>
                             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-400 shadow-lg">
-                                Register as Hostel Owner
+                                <Link to='/ownersignup'>Register as Hostel Owner</Link>
                             </button>
                         </div>
                     </div>
