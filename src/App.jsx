@@ -15,6 +15,7 @@ import HostelListing from './pages/HostelListing'
 import HostelDetail from './pages/HostelDetail'
 import StudentDashboard from './pages/StudentDashboard'
 import OwnerDashboard from './pages/OwnerDashboard'
+import Homepage from './components/Homepage'
 
 const App = () => {
 
@@ -22,12 +23,7 @@ const App = () => {
     {
       path: '/',
       element: <>
-        <Navbar />
-        <HeroSection />
-        <QuickStats />
-        <FeaturedHostels />
-        <WhyChooseUs />
-        <Footer />
+        <Homepage />
       </>
     },
     {

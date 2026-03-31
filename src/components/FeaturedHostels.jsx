@@ -32,7 +32,7 @@ const FeaturedHostels = () => {
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Hostels</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {featuredHostels.map((hostel) => (
+                    {hostels.map((hostel) => (
                         <div key={hostel.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
                             <img
                                 src={hostel.image}
@@ -55,7 +55,7 @@ const FeaturedHostels = () => {
 
                                 <div className="flex flex-wrap gap-2 mb-3">
                                     {hostel.amenities.map((amenity, idx) => (
-                                        <span key={idx} className="bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full">
+                                        <span key={`${hostel.id}-${idx}`} className="bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full">
                                             {amenity}
                                         </span>
                                     ))}

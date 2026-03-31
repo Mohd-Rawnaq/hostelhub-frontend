@@ -3,9 +3,8 @@ import { Home, MapPin, Star, Users, Search, Filter, DollarSign, X } from 'lucide
 import { Link } from 'react-router-dom';
 import API from '../utils/api';
 import { useParams } from 'react-router-dom';
-import params from 'react-router-dom';
-import searchParams from 'react-router-dom';
-import URLSearchParams from 'react-router-dom';
+// import params from 'react-router-dom';
+// import searchParams from 'react-router-dom';
 
 export default function HostelListing() {
   const [hostels, setHostels] = useState([]);
@@ -249,8 +248,8 @@ export default function HostelListing() {
                         key={amenity}
                         onClick={() => toggleAmenityFilter(amenity)}
                         className={`px-3 py-1 rounded-full text-xs font-medium ${filters.amenities.includes(amenity)
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                           }`}
                       >
                         {amenity}
@@ -294,8 +293,18 @@ export default function HostelListing() {
                   to={`/hostel/${hostel._id}`}
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer block"
                 >
-                  <div className="h-48 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
-                    <Home className="w-16 h-16 text-white opacity-50" />
+                  <div className="h-48 bg-gray-200 overflow-hidden">
+                    {hostel.images && hostel.images.length > 0 ? (
+                      <img
+                        src={hostel.images[0]}
+                        alt={hostel.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                        <Home className="w-16 h-16 text-white opacity-50" />
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-5">

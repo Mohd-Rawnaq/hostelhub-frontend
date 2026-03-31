@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { MapPin, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import API from '../utils/api';
-// import { useParams } from 'react-router-dom';
-import params from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+// import params from 'react-router-dom';
 
 const HeroSection = () => {
     const [searchLocation, setSearchLocation] = useState('');
